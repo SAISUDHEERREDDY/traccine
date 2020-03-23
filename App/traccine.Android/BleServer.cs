@@ -24,21 +24,14 @@ namespace traccine.Droid
             public BleServer(Context ctx)
             {
                 _bluetoothManager = (BluetoothManager)ctx.GetSystemService(Context.BluetoothService);
-                _bluetoothAdapter = _bluetoothManager.Adapter;
-            Boolean isNameChanged = _bluetoothAdapter.SetName("traccine");
+                _bluetoothAdapter = _bluetoothManager.Adapter;          
             _bluettothServerCallback = new BleGattServerCallback();
                 _bluetoothServer = _bluetoothManager.OpenGattServer(ctx, _bluettothServerCallback);
 
                 var service = new BluetoothGattService(UUID.FromString("ffe0ecd2-3d16-4f8d-90de-e89e7fc396a5"),
                     GattServiceType.Primary);
                 _characteristic = new BluetoothGattCharacteristic(UUID.FromString("d8de624e-140f-4a22-8594-e2216b84a5f2"), GattProperty.Read | GattProperty.Notify | GattProperty.Write, GattPermission.Read | GattPermission.Write);
-            var chars = "ABC";
-            var random = new Random();
-            var result = new string(
-                Enumerable.Repeat(chars, 20)
-                    .Select(s => s[random.Next(s.Length)])
-                    .ToArray());
-            _characteristic.SetValue(result);
+           
             _characteristic.AddDescriptor(new BluetoothGattDescriptor(UUID.FromString("28765900-7498-4bd4-aa9e-46c4a4fb7b07"),
                         GattDescriptorPermission.Read | GattDescriptorPermission.Write));
 

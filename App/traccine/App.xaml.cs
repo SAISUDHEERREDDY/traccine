@@ -1,4 +1,5 @@
 ﻿using System;
+using traccine.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,8 +10,17 @@ namespace traccine
         public App()
         {
             InitializeComponent();
+            if (string.IsNullOrEmpty(Settings.User))
+            {
+                MainPage = new MainPage(); ;
 
-            MainPage = new NavigationPage(new MainPage());
+            }
+            else
+            {
+                MainPage = new AppShell();
+
+            }
+
         }
 
         protected override void OnStart()

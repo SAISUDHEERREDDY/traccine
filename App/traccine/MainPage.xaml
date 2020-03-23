@@ -112,13 +112,17 @@
                     <StackLayout Spacing="10" HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
                         <yummy:PancakeView
                         BackgroundColor="#FF5A00"
-                        BorderThickness="1"
-                        CornerRadius="20"
+                        BorderThickness="1"                       
+                        CornerRadius="20"                        
                         Elevation="3"
                         HeightRequest="60"
                         HorizontalOptions="Center"
                         WidthRequest="60">
+                            <yummy:PancakeView.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding LoginCommand}"/>
+                            </yummy:PancakeView.GestureRecognizers>
                             <Image
+                             
                             Margin="15"
                             Aspect="AspectFit"
                             HeightRequest="20"

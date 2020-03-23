@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:traccine"
+       xmlns:Renders="clr-namespace:traccine.Renderers"
+       x:Class="traccine.AppShell">
+    <Shell.Resources>
+
+        <Style TargetType="Tab">
+            <Setter Property="Shell.BackgroundColor" 
+                    Value="{StaticResource AppColor}" />
+            <Setter Property="Shell.ForegroundColor" 
+                    Value="{StaticResource AppColor}" />
+            <Setter Property="Shell.TitleColor" 
+                    Value="{StaticResource AppColor}" />
+            <Setter Property="Shell.TabBarBackgroundColor" 
+                    Value="{StaticResource AppColor}" />
+            <Setter Property="Shell.TabBarTitleColor" 
+                    Value="{StaticResource AppColor}" />
+            <Setter Property="Shell.UnselectedColor" 
+                    Value="{StaticResource AppColor}" />
+        </Style>
+
+    </Shell.Resources>
+    <Shell.FlyoutHeader>
+        <Renders:FlyoutHeader />
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Animals"
+                FlyoutDisplayOptions="AsMultipleItems">
+       
+        <ShellContent Title="Dashboard"
+                    
+                     ContentTemplate="{DataTemplate local:HomePage}" />
+        <ShellContent Title="Report Case"
+                    
+                      ContentTemplate="{DataTemplate local:HomePage}" />
+        <ShellContent Title="TimeLine"
+                    
+                    ContentTemplate="{DataTemplate local:HomePage}" />
+        <ShellContent Title="My Profle"
+                    
+                    ContentTemplate="{DataTemplate local:HomePage}" />
+    </FlyoutItem>
+ 
+   
+</Shell>

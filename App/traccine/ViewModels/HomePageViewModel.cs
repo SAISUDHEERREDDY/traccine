@@ -1,13 +1,10 @@
 ﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
-using Shiny.BluetoothLE;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Reactive.Linq;
-using System.Text;
+
 
 namespace traccine.ViewModels
 {
@@ -52,7 +49,7 @@ namespace traccine.ViewModels
             await adapter.StartScanningForDevicesAsync();
             foreach(var device in deviceList)
             {
-                if(device.AdvertisementRecords.Count > 3 && device.Name== "traccine")
+                if(device.AdvertisementRecords.Count > 3 )
                 {
                     var data = device.AdvertisementRecords[2].ToString();
                     try
@@ -64,10 +61,14 @@ namespace traccine.ViewModels
                         continue;
                     }
                     var service = await device.GetServiceAsync(Guid.Parse("ffe0ecd2-3d16-4f8d-90de-e89e7fc396a5"));
-                    var characteristic = await service.GetCharacteristicAsync(Guid.Parse("d8de624e-140f-4a22-8594-e2216b84a5f2"));
-                    var bytes = await characteristic.ReadAsync();
-                    string result = System.Text.Encoding.UTF8.GetString(bytes);
-                    Message = result;
+                    if (service != null)
+                    {
+                        var characteristic = await service.GetCharacteristicAsync(Guid.Parse("d8de624e-140f-4a22-8594-e2216b84a5f2"));
+                        var bytes = await characteristic.ReadAsync();
+                        string result = System.Text.Encoding.UTF8.GetString(bytes);
+                        Message = result;
+                    }
+                   
 
                 }
 

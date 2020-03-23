@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using traccine.ViewModels;
 using Xamarin.Forms;
 
 namespace traccine
@@ -18,6 +19,7 @@ namespace traccine
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = new MainPageViewModel();
             CheckUserPermissions();
         }
         private async void CheckUserPermissions()

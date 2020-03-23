@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "215032580074",
+    "firebase_url": "https://traccine.firebaseio.com",
+    "project_id": "traccine",
+    "storage_bucket": "traccine.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215032580074:android:fd3ec56f676edd2a0a1493",
+        "android_client_info": {
+          "package_name": "com.icuboid.traccine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "215032580074-kmitv6gp2c31q323r9qo4sdkt5s99uno.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.icuboid.traccine",
+            "certificate_hash": "af3c4f9bbda88ca9b7a4cdae8423724ed4dd0020"
+          }
+        },
+        {
+          "client_id": "215032580074-6iu3tjphn1on4f82mld4m47rahfdti5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDADlOVIwiAfMCw4_4MhpiKuMrklpMY9Wg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "215032580074-6iu3tjphn1on4f82mld4m47rahfdti5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,12 +14,7 @@
         <StackLayout>
             <Grid Margin="0,0,0,0">
                 <StackLayout Margin="20,0,20,0" Spacing="20">
-                    <Image
-                        HeightRequest="30"
-                        HorizontalOptions="Start"
-                        Source="hamburgerMenu"
-                        VerticalOptions="Start"
-                        WidthRequest="30" />
+                    
                     <Label
                         FontAttributes="Bold"
                         FontSize="28"
