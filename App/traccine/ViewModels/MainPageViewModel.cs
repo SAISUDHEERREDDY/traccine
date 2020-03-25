@@ -35,21 +35,45 @@ namespace traccine.ViewModels
         }
 
         public bool IsLoggedIn { get; set; }
+        public FirbaseDataBaseHelper firebaseHelper { get; set; }
 
         public string Token { get; set; }
-
+        private static readonly object Instancelock = new object();
         public ICommand LoginCommand { get; set; }
         public ICommand LogoutCommand { get; set; }
         private readonly IGoogleClientManager _googleClientManager;
         public event PropertyChangedEventHandler PropertyChanged;
+        public static MainPageViewModel _instance = null;
+        public String AppName { get; set; }
+        public string PowerdBy { get; set; }
+        public static MainPageViewModel GetInstance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (Instancelock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new MainPageViewModel();
+                        }
+                    }
+
+                }
+                return _instance;
+            }
+        }
+
         public MainPageViewModel()
         {
             LoginCommand = new Command(LoginAsync);
             LogoutCommand = new Command(Logout);
 
             _googleClientManager = CrossGoogleClient.Current;
-
-
+           firebaseHelper = new FirbaseDataBaseHelper();
+            AppName = GlobalSettings.AppName;
+            PowerdBy = GlobalSettings.PowerdBy;
             IsLoggedIn = false;
         }
         public async void LoginAsync()
@@ -87,10 +111,11 @@ namespace traccine.ViewModels
         }
 
 
-        private void OnLoginCompleted(object sender, GoogleClientResultEventArgs<GoogleUser> loginEventArgs)
+        private async void OnLoginCompleted(object sender, GoogleClientResultEventArgs<GoogleUser> loginEventArgs)
         {
             if (loginEventArgs.Data != null)
             {
+
                 GoogleUser googleUser = loginEventArgs.Data;
                 User.Name = googleUser.Name;
                 User.Email = googleUser.Email;
@@ -102,16 +127,38 @@ namespace traccine.ViewModels
                 // Log the current User email
                 Debug.WriteLine(User.Email);
                 IsLoggedIn = true;
-                Settings.User = JsonConvert.SerializeObject(User);
+                
                 var token = CrossGoogleClient.Current.ActiveToken;
                 Token = token;
+                var person = await firebaseHelper.GetPerson(User.Email);
+                UserProfile user = new UserProfile();
+                if (person == null)
+                {
+                 
+                    user.Name = googleUser.Name;
+                    user.Email = googleUser.Email;
+                    user.Picture = googleUser.Picture;
+                    user.Id = Guid.NewGuid().ToString("N").Substring(0, 12);
+                    await firebaseHelper.AddPerson(user.Id, user.Name, user.Email, "", user.Picture);
+                    Settings.User = JsonConvert.SerializeObject(user);
+                }
+                else
+                {
+                    user.Name = person.Name;
+                    user.Email = person.Email;
+                    user.Picture = person.Picture;
+                    user.Id = person.Id;
+                    user.Picture = person.Picture;
+                    Settings.User = JsonConvert.SerializeObject(user);
+
+                }
                 Application.Current.MainPage = new AppShell();
                 Shell.Current.GoToAsync("//MainPage");
 
             }
             else
             {
-                App.Current.MainPage.DisplayAlert("Error", loginEventArgs.Message, "OK");
+                await App.Current.MainPage.DisplayAlert("Error", loginEventArgs.Message, "OK");
             }
 
             _googleClientManager.OnLogin -= OnLoginCompleted;
@@ -120,8 +167,18 @@ namespace traccine.ViewModels
 
         public void Logout()
         {
-            _googleClientManager.OnLogout += OnLogoutCompleted;
-            _googleClientManager.Logout();
+            var token = _googleClientManager.ActiveToken;
+            if (token != null)
+            {
+                _googleClientManager.OnLogout += OnLogoutCompleted;
+                _googleClientManager.Logout();
+            }
+            else
+            {
+                Settings.User = "";
+                Shell.Current.GoToAsync("//Login");
+            }
+          
         }
 
         private void OnLogoutCompleted(object sender, EventArgs loginEventArgs)

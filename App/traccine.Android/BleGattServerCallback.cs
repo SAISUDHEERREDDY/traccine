@@ -29,7 +29,7 @@ namespace traccine.Droid
             BluetoothGattCharacteristic characteristic)
         {
             base.OnCharacteristicReadRequest(device, requestId, offset, characteristic);
-
+          
             Console.WriteLine("Read request from {0}", device.Name);
 
             if (CharacteristicReadRequest != null)
@@ -51,10 +51,20 @@ namespace traccine.Droid
 
         public override void OnConnectionStateChange(BluetoothDevice device, ProfileState status, ProfileState newState)
         {
+
             base.OnConnectionStateChange(device, status, newState);
+            
             Console.WriteLine("State changed to {0}", newState);
 
         }
+
+        //public override void OnMtuChanged(BluetoothDevice device, int mtu)
+        //{
+
+        //    base.OnMtuChanged(device, 512);
+        //    //Console.WriteLine("State changed to {0}", newState);
+
+        //}
 
         public override void OnNotificationSent(BluetoothDevice device, GattStatus status)
         {

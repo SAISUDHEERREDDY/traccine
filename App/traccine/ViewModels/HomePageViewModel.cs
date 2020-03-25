@@ -1,10 +1,12 @@
-﻿using Plugin.BLE;
+﻿using Newtonsoft.Json;
+using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-
+using traccine.Helpers;
+using traccine.Models;
 
 namespace traccine.ViewModels
 {
@@ -18,7 +20,11 @@ namespace traccine.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
         public string _Message { get; set; }
-
+        public int Interactions { get; set; }
+        public int ActiveHours { get; set; }
+        public int Places { get; set; }
+        public int Score { get; set; }
+        public String Username { get; set; }
         public string Message
         {
             get { return _Message; }
@@ -33,11 +39,46 @@ namespace traccine.ViewModels
         }
         public HomePageViewModel()
         {
-            setupclient();
+            //setupclient();
             Message = "";
+            Places = 0;
+            Interactions = 0;
+            Score = 0;
+            ActiveHours = 0;
+            Username = "";
+            Setup();
         }
 
-     
+        private async void Setup()
+        {
+            Username = JsonConvert.DeserializeObject<UserProfile>(Settings.User).Name;
+            ActiveHours= await App.Database.GetActiveHours();
+            Interactions = await App.Database.GetInteraction();
+            if (Interactions == 0)
+            {
+                Score = 100;
+            }
+            else
+            {
+                Score = 0;
+            }
+            if (DateTime.Now.Hour <= 12)
+            {
+                Message= "Good Morning";
+            }
+            else if (DateTime.Now.Hour <= 16)
+            {
+                Message = "Good Afternoon";
+            }
+            else if (DateTime.Now.Hour <= 20)
+            {
+                Message = "Good Evening";
+           }
+            else
+            {
+                Message = "Good Night";
+           }
+        }
 
         public async void setupclient()
         {

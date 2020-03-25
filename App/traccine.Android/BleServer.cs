@@ -5,9 +5,12 @@ using System.Text;
 using Android.Bluetooth;
 using Android.Bluetooth.LE;
 using Android.Content;
+using traccine.Helpers;
 using Java.Util;
 using Random = System.Random;
-
+using Newtonsoft.Json;
+using traccine.Models;
+using traccine.Helpers;
 
 namespace traccine.Droid
 {
@@ -20,14 +23,15 @@ namespace traccine.Droid
             private BleGattServerCallback _bluettothServerCallback;
             private BluetoothGattServer _bluetoothServer;
             private BluetoothGattCharacteristic _characteristic;
+       
 
-            public BleServer(Context ctx)
+        public BleServer(Context ctx)
             {
                 _bluetoothManager = (BluetoothManager)ctx.GetSystemService(Context.BluetoothService);
                 _bluetoothAdapter = _bluetoothManager.Adapter;          
             _bluettothServerCallback = new BleGattServerCallback();
                 _bluetoothServer = _bluetoothManager.OpenGattServer(ctx, _bluettothServerCallback);
-
+           
                 var service = new BluetoothGattService(UUID.FromString("ffe0ecd2-3d16-4f8d-90de-e89e7fc396a5"),
                     GattServiceType.Primary);
                 _characteristic = new BluetoothGattCharacteristic(UUID.FromString("d8de624e-140f-4a22-8594-e2216b84a5f2"), GattProperty.Read | GattProperty.Notify | GattProperty.Write, GattPermission.Read | GattPermission.Write);
@@ -37,7 +41,8 @@ namespace traccine.Droid
 
                 service.AddCharacteristic(_characteristic);
 
-                _bluetoothServer.AddService(service);
+            
+            _bluetoothServer.AddService(service);
 
                 _bluettothServerCallback.CharacteristicReadRequest += _bluettothServerCallback_CharacteristicReadRequest;
                 _bluettothServerCallback.NotificationSent += _bluettothServerCallback_NotificationSent;
@@ -65,33 +70,31 @@ namespace traccine.Droid
 
             void _bluettothServerCallback_NotificationSent(object sender, BleEventArgs e)
             {
-                if (_count == 0)
-                {
-                    _sw = new Stopwatch();
-                    _sw.Start();
-                }
+            var user = JsonConvert.DeserializeObject<UserProfile>(Settings.User);
+            
+          
+            _characteristic.SetValue(user.Id);
 
-                if (_count < 1000)
-                {
-                    var chars = "traccine";
-                    var random = new Random();
-                    var result = new string(
-                        Enumerable.Repeat(chars, 20)
-                            .Select(s => s[random.Next(s.Length)])
-                            .ToArray());
-                    _characteristic.SetValue(result);
+            _bluetoothServer.NotifyCharacteristicChanged(e.Device, _characteristic, false);
+            //if (_count == 0)
+            //    {
+            //        _sw = new Stopwatch();
+            //        _sw.Start();
+            //    }
 
-                    _bluetoothServer.NotifyCharacteristicChanged(e.Device, _characteristic, false);
+            //    if (_count < 1000)
+            //    {
+                  
 
-                    _count++;
+            //        _count++;
 
-                }
-                else
-                {
-                    _sw.Stop();
-                    Console.WriteLine("Sent # {0} notifcations. Total kb:{2}. Time {3}(s). Throughput {1} bytes/s", _count,
-                        _count * 20.0f / _sw.Elapsed.TotalSeconds, _count * 20 / 1000, _sw.Elapsed.TotalSeconds);
-                }
+            //    }
+            //    else
+            //    {
+            //        _sw.Stop();
+            //        Console.WriteLine("Sent # {0} notifcations. Total kb:{2}. Time {3}(s). Throughput {1} bytes/s", _count,
+            //            _count * 20.0f / _sw.Elapsed.TotalSeconds, _count * 20 / 1000, _sw.Elapsed.TotalSeconds);
+            //    }
             }
 
             private bool _notificationsStarted = false;
@@ -99,43 +102,45 @@ namespace traccine.Droid
             private int _readRequestCount = 0;
             void _bluettothServerCallback_CharacteristicReadRequest(object sender, BleEventArgs e)
             {
-            String message = "Phone 1 Jithendra";
-                if (_readRequestCount == 5)
-                {
-                    _notificationsStarted = !_notificationsStarted;
-                    _readRequestCount = 0;
+            var user = JsonConvert.DeserializeObject<UserProfile>(Settings.User);
+            e.Characteristic.SetValue(user.Id);
+            if (_readRequestCount == 5)
+            {
+                _notificationsStarted = !_notificationsStarted;
+                _readRequestCount = 0;
 
-                }
-                else
-                {
-                    _readRequestCount++;
-                    Console.WriteLine("Read req {0}", _readRequestCount);
-                    e.Characteristic.SetValue(String.Format(message, _readRequestCount));
-                    _bluetoothServer.SendResponse(e.Device, e.RequestId, GattStatus.Success, e.Offset,
-                        e.Characteristic.GetValue());
-                    return;
-                }
-
-                if (_notificationsStarted)
-                {
-                    _count = 0;
-
-                    Console.WriteLine("Started notifcations!");
-
-                    e.Characteristic.SetValue(String.Format(message, _readRequestCount));
-                    _bluetoothServer.SendResponse(e.Device, e.RequestId, GattStatus.Success, e.Offset,
-                        e.Characteristic.GetValue());
-                    _bluetoothServer.NotifyCharacteristicChanged(e.Device, e.Characteristic, false);
-                }
-                else
-                {
-                    Console.WriteLine("Stopped notifcations!");
-                    e.Characteristic.SetValue(String.Format(message, _readRequestCount));
-                    _bluetoothServer.SendResponse(e.Device, e.RequestId, GattStatus.Success, e.Offset,
-                        e.Characteristic.GetValue());
-                    _bluetoothServer.NotifyCharacteristicChanged(e.Device, e.Characteristic, false);
-                }
             }
+            else
+            {
+                _readRequestCount++;
+                Console.WriteLine("Read req {0}", _readRequestCount);
+
+                _bluetoothServer.SendResponse(e.Device, e.RequestId, GattStatus.Success, e.Offset,
+                    e.Characteristic.GetValue());
+                _bluetoothServer.NotifyCharacteristicChanged(e.Device, e.Characteristic, false);
+                return;
+            }
+
+            if (_notificationsStarted)
+            {
+                _count = 0;
+
+                Console.WriteLine("Started notifcations!");
+
+                _bluetoothServer.SendResponse(e.Device, e.RequestId, GattStatus.Success, e.Offset,
+                    e.Characteristic.GetValue());
+                _bluetoothServer.NotifyCharacteristicChanged(e.Device, e.Characteristic, false);
+            }
+            else
+            {
+                Console.WriteLine("Stopped notifcations!");
+                e.Characteristic.SetValue("stopped Notifications");
+                _bluetoothServer.SendResponse(e.Device, e.RequestId, GattStatus.Success, e.Offset,
+                    e.Characteristic.GetValue());
+            }
+
+
+        }
 
 
 

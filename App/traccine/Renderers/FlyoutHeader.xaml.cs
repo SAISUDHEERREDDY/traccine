@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Plugin.GoogleClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,11 +18,17 @@ namespace traccine.Renderers
     public partial class FlyoutHeader : ContentView
     {
         public event PropertyChangedEventHandler PropertyChanged;
-       
+        private readonly IGoogleClientManager _googleClientManager;
         public FlyoutHeader()
         {
             InitializeComponent();
+            _googleClientManager = CrossGoogleClient.Current;
             BindingContext = new FlyoutHeaderViewModel();
+        }
+        public async void LogoutCommand(object sender, EventArgs e)
+        {
+            _googleClientManager.Logout();
+            Settings.User = "";
         }
     }
 }

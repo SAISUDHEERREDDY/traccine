@@ -7,10 +7,12 @@ using System.Runtime.Remoting.Contexts;
 using Java.Security;
 using System;
 using Plugin.GoogleClient;
+using Android.Content;
+using ImageCircle.Forms.Plugin.Droid;
 
 namespace traccine.Droid
 {
-    [Activity(Label = "traccine", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "AmiSafe", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         private BleServer _bleServer;
@@ -18,12 +20,17 @@ namespace traccine.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-            _bleServer = new BleServer(this.ApplicationContext);
+            var intent = new Intent(ApplicationContext, typeof(PeriodicService));
+            var source = PendingIntent.GetBroadcast(ApplicationContext, 0, intent, 0);
+            StartService(intent);
+            //PeriodicService.EnqueueWork(ApplicationContext, new Intent());           
             PrintHashKey();
             base.OnCreate(savedInstanceState);
             GoogleClientManager.Initialize(this);
+            //_bleServer = new BleServer(this.ApplicationContext);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            ImageCircleRenderer.Init();
             LoadApplication(new App());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)

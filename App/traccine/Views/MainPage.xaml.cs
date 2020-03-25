@@ -8,19 +8,28 @@ using System.Text;
 using System.Threading.Tasks;
 using traccine.ViewModels;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
-namespace traccine
+namespace traccine.Views
 {
-    // Learn more about making custom code visible in the Xamarin.Forms previewer
-    // by visiting https://aka.ms/xamarinforms-previewer
-    [DesignTimeVisible(false)]
-    public partial class MainPage : ContentPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class MainPage : ContentPage ,INotifyPropertyChanged
     {
+       
         public MainPage()
         {
-            InitializeComponent();
-            BindingContext = new MainPageViewModel();
+           
             CheckUserPermissions();
+            BindingContext = MainPageViewModel.GetInstance;
+            Shell.SetTabBarIsVisible(this, false);
+            Shell.SetNavBarIsVisible(this, false);
+            Shell.SetFlyoutBehavior(this, 0);
+            NavigationPage.SetHasBackButton(this, false);
+            SetValue(NavigationPage.HasNavigationBarProperty, false);
+          
+            InitializeComponent();
+           
+          
         }
         private async void CheckUserPermissions()
         {
@@ -51,11 +60,6 @@ namespace traccine
             {
 
             }
-        }
-
-        void LoginClick(System.Object sender, System.EventArgs e)
-        {
-            Navigation.PushAsync(new HomePage());
         }
     }
 }

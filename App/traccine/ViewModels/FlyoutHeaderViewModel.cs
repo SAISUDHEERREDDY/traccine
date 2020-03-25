@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Plugin.GoogleClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Windows.Input;
 using traccine.Helpers;
 using traccine.Models;
+using Xamarin.Forms;
 
 namespace traccine.ViewModels
 {
@@ -44,17 +47,24 @@ namespace traccine.ViewModels
                 }
             }
         }
+        public MainPageViewModel mainPageViewModel;
         public event PropertyChangedEventHandler PropertyChanged;
-
+        public ICommand LogoutCommand { get; set; }
         public FlyoutHeaderViewModel()
         {
-            var user = JsonConvert.DeserializeObject<UserProfile>(Settings.User);
+            LogoutCommand = new Command(Logout);
+            //mainPageViewModel = new MainPageViewModel();
+              var user = JsonConvert.DeserializeObject<UserProfile>(Settings.User);
             if (user != null)
             {
                 Picture = user.Picture;
                 Email = user.Email;
 
             }
+        }
+        public void Logout()
+        {
+            MainPageViewModel.GetInstance.Logout();
         }
     }
 }

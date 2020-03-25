@@ -1,9 +1,12 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
-<ContentPage
-    x:Class="traccine.HomePage"
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:renderers="clr-namespace:traccine.Renderers"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="traccine.Views.HomePage"
+              xmlns:renderers="clr-namespace:traccine.Renderers"
+             Title="Dashboard"
     xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     Padding="0,40,0,0"
     BackgroundColor="#791AE5"
@@ -13,22 +16,23 @@
 
         <StackLayout>
             <Grid Margin="0,0,0,0">
-                <StackLayout Margin="20,0,20,0" Spacing="20">
-                    
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="28"
-                        HorizontalOptions="StartAndExpand"
-                        Text="{Binding Message}"
-                        TextColor="White"
-                        VerticalOptions="StartAndExpand"
-                        WidthRequest="200" />
+                <StackLayout Margin="0,30,20,30" Spacing="50">
+                    <Label Margin="30,0,0,0"  VerticalOptions="StartAndExpand" HorizontalOptions="StartAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Message}" FontSize="19" FontAttributes="Bold" ForegroundColor="White" />
+                                <Span Text="&#10; " FontSize="15" FontAttributes="Bold" ForegroundColor="White" />
+                                <Span Text="{Binding Username}" FontAttributes="Bold" FontSize="18" ForegroundColor="White" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                   
                 </StackLayout>
                 <Image
                     HorizontalOptions="EndAndExpand"
                     Source="bgImage"
-                    WidthRequest="200" />
-                <yummy:PancakeView
+                    WidthRequest="150" />
+                <!--<yummy:PancakeView
                     Margin="20,0,20,-20"
                     Padding="10,0,0,0"
                     BackgroundColor="White"
@@ -53,7 +57,7 @@
                             PlaceholderColor="#99A1B3"
                             TextColor="#484848" />
                     </StackLayout>
-                </yummy:PancakeView>
+                </yummy:PancakeView>-->
             </Grid>
             <yummy:PancakeView
                 Margin="0,30,0,0"
@@ -62,7 +66,7 @@
                 CornerRadius="40,40,0,0"
                 VerticalOptions="FillAndExpand">
                 <StackLayout>
-                    <Label
+                    <!--<Label
                         Margin="20"
                         FontAttributes="Bold"
                         FontSize="20"
@@ -70,11 +74,11 @@
                         HorizontalTextAlignment="Center"
                         Text="How to get started?"
                         TextColor="#791AE5"
-                        VerticalOptions="Center" />
+                        VerticalOptions="Center" />-->
                     <Grid Margin="5" ColumnSpacing="20" RowSpacing="30">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="230" />
-                            <RowDefinition Height="230" />
+                            <RowDefinition Height="190" />
+                            <RowDefinition Height="190" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -89,15 +93,22 @@
                             CornerRadius="15"
                             Elevation="3">
                             <StackLayout>
-                                <Image Source="im1" />
+                                <Image Source="im3" />
+                                
                                 <Label
                                     FontAttributes="Bold"
-                                    FontSize="20"
+                                    FontSize="14"
                                     HorizontalOptions="CenterAndExpand"
                                     HorizontalTextAlignment="Center"
-                                    Text="Create your account"
+                                    Text="Interactions"
                                     TextColor="Black"
                                     VerticalOptions="CenterAndExpand" />
+                                <Label Text="{Binding Interactions}" 
+                                    FontSize="25"
+                                    HorizontalOptions="CenterAndExpand"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="Black"
+                                    VerticalOptions="CenterAndExpand"  />
                             </StackLayout>
                         </yummy:PancakeView>
                         <yummy:PancakeView
@@ -112,12 +123,18 @@
                                 <Image Source="im2" />
                                 <Label
                                     FontAttributes="Bold"
-                                    FontSize="20"
+                                    FontSize="15"
                                     HorizontalOptions="CenterAndExpand"
                                     HorizontalTextAlignment="Center"
-                                    Text="Plan your journeys"
+                                    Text="Places"
                                     TextColor="Black"
                                     VerticalOptions="CenterAndExpand" />
+                                <Label Text="{Binding Places}" 
+                                    FontSize="25"
+                                    HorizontalOptions="CenterAndExpand"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="Black"
+                                    VerticalOptions="CenterAndExpand"  />
                             </StackLayout>
                         </yummy:PancakeView>
                         <yummy:PancakeView
@@ -129,15 +146,21 @@
                             CornerRadius="15"
                             Elevation="3">
                             <StackLayout>
-                                <Image Source="im3" />
+                                <Image Source="im1" />
                                 <Label
                                     FontAttributes="Bold"
-                                    FontSize="20"
+                                    FontSize="15"
                                     HorizontalOptions="CenterAndExpand"
                                     HorizontalTextAlignment="Center"
-                                    Text="Make your driver"
+                                    Text="Score"
                                     TextColor="Black"
                                     VerticalOptions="CenterAndExpand" />
+                                <Label Text="{Binding Score}" 
+                                    FontSize="25"
+                                    HorizontalOptions="CenterAndExpand"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="Black"
+                                    VerticalOptions="CenterAndExpand"  />
                             </StackLayout>
                         </yummy:PancakeView>
                         <yummy:PancakeView
@@ -152,12 +175,18 @@
                                 <Image Source="im4" />
                                 <Label
                                     FontAttributes="Bold"
-                                    FontSize="20"
+                                    FontSize="15"
                                     HorizontalOptions="CenterAndExpand"
                                     HorizontalTextAlignment="Center"
-                                    Text="Enjoy your journey"
+                                    Text="Active Hours"
                                     TextColor="Black"
                                     VerticalOptions="CenterAndExpand" />
+                                <Label Text="{Binding ActiveHours}" 
+                                    FontSize="25"
+                                    HorizontalOptions="CenterAndExpand"
+                                    HorizontalTextAlignment="Center"
+                                    TextColor="Black"
+                                    VerticalOptions="CenterAndExpand"  />
                             </StackLayout>
                         </yummy:PancakeView>
                     </Grid>

@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Shell xmlns="http://xamarin.com/schemas/2014/forms"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:local="clr-namespace:traccine"
+       xmlns:local="clr-namespace:traccine.Views"
        xmlns:Renders="clr-namespace:traccine.Renderers"
-       x:Class="traccine.AppShell">
+       x:Class="traccine.AppShell"
+       BackgroundColor="#791AE5">
     <Shell.Resources>
 
-        <Style TargetType="Tab">
+        <Style TargetType="TabbedPage">
             <Setter Property="Shell.BackgroundColor" 
                     Value="{StaticResource AppColor}" />
             <Setter Property="Shell.ForegroundColor" 
@@ -25,23 +26,27 @@
     <Shell.FlyoutHeader>
         <Renders:FlyoutHeader />
     </Shell.FlyoutHeader>
-
-    <FlyoutItem Title="Animals"
+  
+    <FlyoutItem Title="TRACCINE"
                 FlyoutDisplayOptions="AsMultipleItems">
        
         <ShellContent Title="Dashboard"
-                    
+                       Icon="dashboard"
                      ContentTemplate="{DataTemplate local:HomePage}" />
-        <ShellContent Title="Report Case"
-                    
-                      ContentTemplate="{DataTemplate local:HomePage}" />
+        <!--<ShellContent Title="Report Case"                    
+                      ContentTemplate="{DataTemplate local:HomePage}" />-->
         <ShellContent Title="TimeLine"
-                    
-                    ContentTemplate="{DataTemplate local:HomePage}" />
+                    Icon="timeline"
+                    ContentTemplate="{DataTemplate local:Timeline}" />
         <ShellContent Title="My Profle"
-                    
-                    ContentTemplate="{DataTemplate local:HomePage}" />
+                    Icon="profile"
+                    ContentTemplate="{DataTemplate local:ProfilePage}" />
+        
     </FlyoutItem>
- 
-   
+
+    <ShellItem Route="Login">
+
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+
+    </ShellItem>
 </Shell>
