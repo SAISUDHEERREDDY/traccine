@@ -4,22 +4,89 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              mc:Ignorable="d"
              x:Class="traccine.Views.ProfilePage"
              Title="My Profile">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Order="Primary" Text="Save"  Command="{Binding UpdateCommand}"></ToolbarItem>
+    </ContentPage.ToolbarItems>
     <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+       
         <Grid BackgroundColor="{StaticResource AppColor}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <!-- 1. Profile picture-->
-            <abstractions:CircleImage Grid.Row="0" Source="{Binding User.Picture}" 
-               HorizontalOptions="CenterAndExpand"
+            <Grid Margin="0,50,0,0" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="70" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- 1. Profile picture-->
+                <abstractions:CircleImage Grid.RowSpan="2" Grid.Column="0" Source="{Binding User.Picture}" 
+               HorizontalOptions="StartAndExpand"
+                                      Margin="0,-50,0,0"
+                                          WidthRequest="100"
                                   VerticalOptions="StartAndExpand"
                />
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding TotalInteractions}" Style="{StaticResource stlBoardDesc}"/>
 
-            <!-- 2. Contact informaqtion frame-->
+                <Label Grid.Row="1" Grid.Column="1" Text="Interactions" Style="{StaticResource stlBoardTitle}" />
+                <Label Grid.Row="0" Grid.Column="2" Text="{Binding TotalActiveHours}" Style="{StaticResource stlBoardDesc}"/>
+
+                <Label Grid.Row="1" Grid.Column="2" Text="Active(Hrs)" Style="{StaticResource stlBoardTitle}"/>
+
+                <Label Grid.Row="0" Grid.Column="3" Text="{Binding TotalScore}" Style="{StaticResource stlBoardDesc}"/>
+
+                <Label Grid.Row="1" Grid.Column="3" Text="Score" Style="{StaticResource stlBoardTitle}"/>
+
+                <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" TextColor="White" Padding="10,5,0,0" Text="{Binding User.Name}" FontAttributes="Bold" FontSize="15"/>
+                <!--<Label Grid.Row="1" Grid.Column="0" Text="New York" TextColor="#a5a2a2" FontSize="16"/>-->
+                <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"  TextColor="White" Padding="10,5,0,0" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" FontSize="12">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            
+                            <Span Text="{Binding User.Email}"  />
+                            <Span Text=" &#10; &#10;  &#10;"/>
+                            <Span   Text="Protect your dearest  by sharing the app with your friends and family"/>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <yummy:PancakeView
+                     Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4"
+                    Margin="20,0,20,-20"
+                    Padding="10,0,0,0"
+                    BackgroundColor="White"
+                    BorderThickness="1"
+                    CornerRadius="25"
+                  
+                    HeightRequest="50"
+                    VerticalOptions="EndAndExpand">
+                    <StackLayout Orientation="Horizontal">
+                        <!--<Image
+                            HeightRequest="20"
+                            HorizontalOptions="Start"
+                            Source="Share"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="25" />-->
+                        <Button
+                            FontSize="18"
+                            HorizontalOptions="FillAndExpand"
+                            TextColor="#484848"
+                            Text="Share"
+                            BackgroundColor="White"
+                            Command="{Binding ShareCommand}"/>
+                    </StackLayout>
+                </yummy:PancakeView>
+                <!-- 2. Contact informaqtion frame-->
+            </Grid>
             <StackLayout Grid.Row="0" BackgroundColor="White" VerticalOptions="EndAndExpand">
                 <Frame  Style="{StaticResource stlMainFrame}" CornerRadius="40" >
                     <!-- Blocks: 3 and 4 -->
@@ -32,41 +99,77 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <!-- 4. Contact information-->
-                        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding User.Name}" FontAttributes="Bold" FontSize="20"/>
-                        <!--<Label Grid.Row="1" Grid.Column="0" Text="New York" TextColor="#a5a2a2" FontSize="16"/>-->
-                        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Padding="0,10,0,0" FontSize="16">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Email: " FontAttributes="Bold" />
-                                    <Span Text="{Binding User.Email}"  />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <StackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Padding="0,0,0,0" >
+                       
+                        <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Padding="0,0,0,0" >
                             <Entry Placeholder="Enter Phone Number" Text="{Binding User.PhoneNumber}" Keyboard="Numeric" />
 
                         </StackLayout>
-                        <!--4. Contact information: Board inforation-->
-                        <Label Grid.Row="4" Grid.Column="0" Text="Interactions" Style="{StaticResource stlBoardTitle}" />
-                        <Label Grid.Row="5" Grid.Column="0" Text="{Binding TotalInteractions}" Style="{StaticResource stlBoardDesc}"/>
+                       
 
-                        <Label Grid.Row="4" Grid.Column="1" Text="Active(Hrs)" Style="{StaticResource stlBoardTitle}"/>
-                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding TotalActiveHours}" Style="{StaticResource stlBoardDesc}"/>
-
-                        <Label Grid.Row="4" Grid.Column="2" Text="Score" Style="{StaticResource stlBoardTitle}"/>
-                        <Label Grid.Row="5" Grid.Column="2" Text="{Binding TotalScore}" Style="{StaticResource stlBoardDesc}"/>
                         <!--4. Contact information: Follow button-->
-                        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" TextColor="White" BackgroundColor="#2193f3" Text="Save" Margin="0,40,0,2" Command="{Binding UpdateCommand}"  FontAttributes="Bold" FontSize="14" HeightRequest="35"/>
+                        <TableView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="3" >
+                            <TableRoot>
+                                <TableSection >
+                                  
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label
+                                    Margin="1,0,0,0"
+                                    Text="Are you infected"
+                                    VerticalOptions="Center" />
+                                            <Switch IsToggled="{Binding User.IsInfected}" OnColor="Gray"
+                                     ThumbColor="BlueViolet"   Margin="0,0,5,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="Center"
+                                    WidthRequest="60"/>
+                                          
+
+                                        </StackLayout>
+                                    </ViewCell>
+
+                                    <!--<ViewCell>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label
+                                    Margin="1,0,0,0"
+                                    Text="Are you infected"
+                                    VerticalOptions="Center" />
+                                            <Switch IsToggled="true" OnColor="Gray"
+                                 ThumbColor="BlueViolet"   Margin="0,0,5,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="Center"
+                                    WidthRequest="60"/>
+
+
+                                        </StackLayout>
+                                    </ViewCell>-->
+
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label
+                                    Margin="1,0,0,0"
+                                    Text="Unsubscribe Notifications"
+                                    VerticalOptions="Center" />
+                                            <Switch IsToggled="{Binding u}"  OnColor="Gray"
+                                 ThumbColor="BlueViolet"   Margin="0,0,5,0"
+                                    HorizontalOptions="EndAndExpand"
+                                    VerticalOptions="Center"
+                                    WidthRequest="60"/>
+
+
+                                        </StackLayout>
+                                    </ViewCell>
+                                </TableSection>
+                            </TableRoot>
+                        </TableView>
+
                     </Grid>
                 </Frame>
+             
             </StackLayout>
-
+            
         </Grid>
+        
     </ScrollView>
 </ContentPage>

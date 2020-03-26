@@ -10,7 +10,8 @@
        
             <Button Command="{Binding LogoutCommand}"
            Text="SignOut"              
-                HeightRequest="50"
+                HeightRequest="40"
+                    BackgroundColor="White"
                  Margin="5"
                     HorizontalOptions="EndAndExpand"             
                VerticalOptions="StartAndExpand"

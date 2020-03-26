@@ -12,7 +12,8 @@ namespace traccine.Models
         public string Email { get; set; }
         public Uri Picture { get; set; }
         public string PhoneNumber { get; set; }
-
+        public Boolean IsInfected { get; set; }       
+        public string FcmToken { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

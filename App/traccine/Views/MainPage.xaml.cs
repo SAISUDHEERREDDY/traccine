@@ -31,12 +31,12 @@ namespace traccine.Views
            
           
         }
-        private async void CheckUserPermissions()
+        public async void CheckUserPermissions()
         {
             try
             {
-                var status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
-                if (status != PermissionStatus.Granted)
+                var locationstatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+                if (locationstatus != PermissionStatus.Granted)
                 {
                     if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Location))
                     {
@@ -44,16 +44,37 @@ namespace traccine.Views
                     }
 
                     var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Location });
-                    status = results[Permission.Location];
+                    locationstatus = results[Permission.Location];
                 }
 
-                if (status == PermissionStatus.Granted)
+                if (locationstatus == PermissionStatus.Granted)
                 {
 
                 }
-                else if (status != PermissionStatus.Unknown)
+                else if (locationstatus != PermissionStatus.Unknown)
                 {
                     await DisplayAlert("Location Denied", "Can not continue, try again.", "OK");
+                }
+
+                var Storagestatus = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Storage);
+                if (Storagestatus != PermissionStatus.Granted)
+                {
+                    if (await CrossPermissions.Current.ShouldShowRequestPermissionRationaleAsync(Permission.Storage))
+                    {
+                        await DisplayAlert("Need Storage", "App needs Storage", "OK");
+                    }
+
+                    var results = await CrossPermissions.Current.RequestPermissionsAsync(new[] { Permission.Storage });
+                    Storagestatus = results[Permission.Storage];
+                }
+
+                if (Storagestatus == PermissionStatus.Granted)
+                {
+
+                }
+                else if (Storagestatus != PermissionStatus.Unknown)
+                {
+                    await DisplayAlert("Storage Denied", "Can not continue, try again.", "OK");
                 }
             }
             catch (Exception ex)

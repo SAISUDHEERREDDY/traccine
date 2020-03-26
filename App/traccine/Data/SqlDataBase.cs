@@ -64,6 +64,18 @@ namespace traccine.Data
 
 
         }
+        public async Task<List<string>> GetTotalInteractedEmails()
+        {
+
+            var data = await _database.Table<TimeLineModel>()
+                              .OrderByDescending(x => x.DateTime)
+                              .ToListAsync();
+            var finaldata = data.GroupBy(x => x.Email).Select(y=>y.Key);
+
+            return finaldata.ToList();
+
+
+        }
         public async Task<int> GetActiveHours()
         {
             var toDate = DateTime.UtcNow;

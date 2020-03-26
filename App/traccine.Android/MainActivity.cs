@@ -9,6 +9,7 @@ using System;
 using Plugin.GoogleClient;
 using Android.Content;
 using ImageCircle.Forms.Plugin.Droid;
+using Plugin.FirebasePushNotification;
 
 namespace traccine.Droid
 {
@@ -30,6 +31,7 @@ namespace traccine.Droid
             //_bleServer = new BleServer(this.ApplicationContext);
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            FirebasePushNotificationManager.ProcessIntent(this, Intent);
             ImageCircleRenderer.Init();
             LoadApplication(new App());
         }
@@ -64,6 +66,11 @@ namespace traccine.Droid
             {
                 System.Diagnostics.Debug.WriteLine(e);
             }
+        }
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+            FirebasePushNotificationManager.ProcessIntent(this, intent);
         }
     }
 }

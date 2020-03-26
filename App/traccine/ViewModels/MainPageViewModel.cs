@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Plugin.FirebasePushNotification;
 using Plugin.GoogleClient;
 using Plugin.GoogleClient.Shared;
 using System;
@@ -44,6 +45,7 @@ namespace traccine.ViewModels
         private readonly IGoogleClientManager _googleClientManager;
         public event PropertyChangedEventHandler PropertyChanged;
         public static MainPageViewModel _instance = null;
+       
         public String AppName { get; set; }
         public string PowerdBy { get; set; }
         public static MainPageViewModel GetInstance
@@ -69,12 +71,55 @@ namespace traccine.ViewModels
         {
             LoginCommand = new Command(LoginAsync);
             LogoutCommand = new Command(Logout);
-
+          
             _googleClientManager = CrossGoogleClient.Current;
            firebaseHelper = new FirbaseDataBaseHelper();
             AppName = GlobalSettings.AppName;
             PowerdBy = GlobalSettings.PowerdBy;
             IsLoggedIn = false;
+           
+            if(Settings.User != "")
+            {
+                SetupFcm();
+            }
+        }
+        public async void SetupFcm()
+        {
+            CrossFirebasePushNotification.Current.OnTokenRefresh += async (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+                var existinguser = JsonConvert.DeserializeObject<UserProfile>(Settings.User);
+                var person = await firebaseHelper.GetPerson(existinguser.Email);
+                await firebaseHelper.UpdateFcmToken(existinguser.Id , p.Token);
+                CrossFirebasePushNotification.Current.UnsubscribeAll();
+                CrossFirebasePushNotification.Current.Subscribe("AmiSafe_App");
+
+
+
+                var topis = CrossFirebasePushNotification.Current.SubscribedTopics;
+
+            };
+            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            {
+
+                System.Diagnostics.Debug.WriteLine("Received");
+
+            };
+            CrossFirebasePushNotification.Current.OnNotificationOpened += async (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine("Opened");
+
+                foreach (var data in p.Data)
+                {
+
+                    // await service.GetSites();
+
+
+                    System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
+
+                }
+
+            };
         }
         public async void LoginAsync()
         {
@@ -131,6 +176,7 @@ namespace traccine.ViewModels
                 var token = CrossGoogleClient.Current.ActiveToken;
                 Token = token;
                 var person = await firebaseHelper.GetPerson(User.Email);
+                SetupFcm();
                 UserProfile user = new UserProfile();
                 if (person == null)
                 {
@@ -149,8 +195,10 @@ namespace traccine.ViewModels
                     user.Picture = person.Picture;
                     user.Id = person.Id;
                     user.Picture = person.Picture;
+                    user.PhoneNumber = person.PhoneNumber;
+                    user.IsInfected = person.IsInfected;
                     Settings.User = JsonConvert.SerializeObject(user);
-
+                   
                 }
                 Application.Current.MainPage = new AppShell();
                 Shell.Current.GoToAsync("//MainPage");
